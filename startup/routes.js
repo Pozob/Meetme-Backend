@@ -3,6 +3,7 @@ const user = require("../routes/user");
 const department = require("../routes/department");
 const meeting = require("../routes/meeting");
 const room = require("../routes/room");
+const company = require("../routes/company");
 
 module.exports = function(app) {
     app.use(express.json());
@@ -10,4 +11,5 @@ module.exports = function(app) {
     app.use("/department", department);
     app.use("/meeting", meeting);
     app.use("/room", room);
+    app.use("/company", company)
 };
