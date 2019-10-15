@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 const random = require("../util/randomId");
+const jwt = require("jsonwebtoken");
 
-const userSchema = mongoose.model("User", new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     _id: {
         type: String,
         default: () => random.generate()
@@ -38,7 +39,20 @@ const userSchema = mongoose.model("User", new mongoose.Schema({
         ref: "Department",
         required: true
     }
-}));
+});
+
+userSchema.methods.generateAuthToken = function() {
+    const obj = {
+        name: this.name,
+        email: this.email,
+        username: this.username,
+        department: this.department
+    };
+    
+    return jwt.sign(obj, process.env.JWT_KEY);
+};
+
+const userModel = mongoose.model("User", userSchema);
 
 function validateUser(user) {
     //Joi Validation schema
@@ -53,5 +67,5 @@ function validateUser(user) {
     return schema.validate(user);
 }
 
-exports.User = userSchema;
+exports.User = userModel;
 exports.validateUser = validateUser;

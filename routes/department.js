@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const valid = require("../middleware/validation");
+const auth = require("../middleware/auth");
 const {Department, validateDepartment} = require("../models/department");
 
 //Returns all
@@ -22,19 +23,19 @@ router.get("/:id", (req, res) => {
 });
 
 //Create
-router.post("/", [valid(validateDepartment)], (req, res) => {
+router.post("/", [auth, valid(validateDepartment)], (req, res) => {
     const department = new Department(req.body);
     department.save().then(dep => res.send(dep));
 });
 
 //Update
-router.put("/:id", [valid(validateDepartment)], (req, res) => {
+router.put("/:id", [auth, valid(validateDepartment)], (req, res) => {
     Department.findByIdAndUpdate(req.params.id, req.body, {new: true, select: "-__v"})
         .then(dep => res.send(dep));
 });
 
 //Delete
-router.delete("/:id", (req, res) => {
+router.delete("/:id", [auth], (req, res) => {
     Department.findByIdAndRemove(req.params.id)
         .then(dep => res.send(dep))
         .catch(err => {

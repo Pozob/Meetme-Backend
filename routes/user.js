@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const valid = require("../middleware/validation");
+const auth = require("../middleware/auth");
+const bcrypt = require("bcryptjs");
 const {User, validateUser} = require("../models/user");
 
 //Returns all
@@ -21,28 +23,38 @@ router.get("/:id", (req, res) => {
 });
 
 //Create
-router.post("/", [valid(validateUser)], async (req, res) => {
-    let user = await User.findOne({email: req.body.email});
+router.post("/", [valid(validateUser)], async(req, res) => {
+    let user = await User.findOne({username: req.body.username});
     if (user) return res.status(400).send("User already registered");
     
+    user = new User(req.body);
+    user.password = bcrypt.hashSync(req.body.password, 10);
+    user = await user.save();
+    const token = user.generateAuthToken();
     
+    user = await User.findOne({_id: user._id}).select('-__v').populate('department');
+    res.header("x-webtoken", token)
+        .header('Access-Control-Allow-Headers', 'x-webtoken')
+        .send(user);
 });
 
 //Update
-router.put("/:id", [valid(validateUser)], async (req, res) => {
+router.put("/:id", [auth, valid(validateUser)], async(req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, select: "-__v -password -departments"})
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            select: "-__v -password -departments"
+        });
         if (!user) return res.status(404).send("User not found");
         return res.send(user);
     } catch (e) {
         console.log(e);
         res.send("Error");
     }
-    
 });
 
 //Delete
-router.delete("/:id", (req, res) => {
+router.delete("/:id", [auth], (req, res) => {
     User.deleteOne({_id: req.params.id})
 });
 

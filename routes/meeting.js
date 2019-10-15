@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const valid = require("../middleware/validation");
+const auth = require("../middleware/auth");
 const {Meeting, validateMeeting} = require("../models/meeting");
 
 router.get("/", (req, res) => {
@@ -23,17 +24,17 @@ router.get("/:id", (req, res) => {
         .then(meeting => res.send(meeting));
 });
 
-router.post("/", [valid(validateMeeting)], (req, res) => {
+router.post("/", [auth, valid(validateMeeting)], (req, res) => {
     const meeting = new Meeting(req.body);
     meeting.save().then(m => res.send(m));
 });
 
-router.put("/:id", [valid(validateMeeting)], (req, res) => {
+router.put("/:id", [auth, valid(validateMeeting)], (req, res) => {
     Meeting.findByIdAndUpdate(req.params.id, req.body, {new: true, select: "-__v"})
         .then(meeting => res.send(meeting));
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", [auth], (req, res) => {
     Meeting.findByIdAndRemove(req.params.id).then(meeting => res.send(meeting));
 });
 

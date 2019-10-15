@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const {Company, validateCompany} = require("../models/company");
 const valid = require("../middleware/validation");
+const auth = require("../middleware/auth");
+const {Company, validateCompany} = require("../models/company");
 
 //Returns all
 router.get("/", (req, res) => {
@@ -20,13 +21,13 @@ router.get("/:id", (req, res) => {
 });
 
 //Create
-router.post("/", [valid(validateCompany)], (req, res) => {
+router.post("/", [auth, valid(validateCompany)], (req, res) => {
     const company = new Company(req.body);
     company.save().then(e => res.send(e));
 });
 
 //Update
-router.put("/:id", [valid(validateCompany)], async (req, res) => {
+router.put("/:id", [auth, valid(validateCompany)], async (req, res) => {
     const {id} = req.params;
     try {
         const company = await Company.findByIdAndUpdate(id, req.body, {new: true, select: "-__v"});
@@ -39,7 +40,7 @@ router.put("/:id", [valid(validateCompany)], async (req, res) => {
 });
 
 //Delete
-router.delete("/:id", (req, res) => {
+router.delete("/:id", [auth], (req, res) => {
     Company.findByIdAndRemove(req.params.id)
         .then(() => res.send({}))
         .catch(err => {
