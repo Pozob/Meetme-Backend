@@ -16,7 +16,7 @@ const companySchema = new mongoose.Schema({
     address: {
         type: String,
         minlength: 5,
-        required: false,
+        required: false
     }
 });
 
@@ -32,5 +32,4 @@ function validateCompany(company) {
 }
 
 exports.Company = company;
-exports.CompanySchema = companySchema;
 exports.validateCompany = validateCompany;

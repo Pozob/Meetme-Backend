@@ -26,13 +26,16 @@ router.post("/", [valid(validateCompany)], (req, res) => {
 });
 
 //Update
-router.put("/:id", [valid(validateCompany)], (req, res) => {
-    Company.findByIdAndUpdate(req.params.id, req.body, {new: true, select: "-__v"})
-        .then(company => res.send(company))
-        .catch(err => {
-            console.log(err);
-            res.status(404).send("Id not found");
-        });
+router.put("/:id", [valid(validateCompany)], async (req, res) => {
+    const {id} = req.params;
+    try {
+        const company = await Company.findByIdAndUpdate(id, req.body, {new: true, select: "-__v"});
+        if (!company) return res.status(404).send(`${id} not found`);
+        res.send(company);
+    } catch (e) {
+        console.log(e);
+        res.send(`Could not update  + ${id}`);
+    }
 });
 
 //Delete

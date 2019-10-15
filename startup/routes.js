@@ -7,7 +7,7 @@ const company = require("../routes/company");
 
 module.exports = function(app) {
     app.use(express.json());
-    app.use("/users", user);
+    app.use("/user", user);
     app.use("/department", department);
     app.use("/meeting", meeting);
     app.use("/room", room);

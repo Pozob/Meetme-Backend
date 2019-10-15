@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 const random = require("../services/randomId");
-const {Department} = require("./department");
 
-const userSchema = new mongoose.Schema({
+const userSchema = mongoose.model("User", new mongoose.Schema({
     _id: {
         type: String,
         default: () => random.generate()
@@ -31,24 +30,27 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minlength: 5
+        minlength: 5,
+        select: false
     },
     department: {
-        type: Department,
+        type: String,
+        ref: "Department",
         required: true
     }
-});
+}));
 
 function validateUser(user) {
     //Joi Validation schema
-    const schema = {
+    const schema = Joi.object({
         name: Joi.string().min(2).required(),
         email: Joi.string().min(5).max(1024).required(),
         username: Joi.string().min(5).max(1024).required(),
         password: Joi.string().min(5).required(),
-    };
+        department: Joi.string().min(7).max(7)
+    });
     
-    return Joi.validate(user, schema);
+    return schema.validate(user);
 }
 
 exports.User = userSchema;
