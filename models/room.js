@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
-const random = require("../services/randomId");
+const random = require("../util/randomId");
 
 const room = mongoose.model("Room", new mongoose.Schema({
     _id: {
         type: String,
-        default: () => random.generate(9)
+        default: () => random.generate(8)
     },
     name: {
         type: String,
@@ -15,11 +15,6 @@ const room = mongoose.model("Room", new mongoose.Schema({
     seatsize: {
         type: Number,
         required: false,
-    },
-    address: {
-        type: String,
-        minlength: 5,
-        required: false
     },
     company: {
         type: String,

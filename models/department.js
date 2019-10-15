@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
-const random = require('../services/randomId');
+const random = require('../util/randomId');
 
 const departmentSchema = new mongoose.Schema({
     _id: {
