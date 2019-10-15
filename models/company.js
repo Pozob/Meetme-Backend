@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 const random = require('../services/randomId');
 
-const companySchema = new mongoose.Schema({
+const company = mongoose.model("Company", new mongoose.Schema({
     _id: {
         type: String,
         default: () => random.generate(6)
@@ -18,16 +18,16 @@ const companySchema = new mongoose.Schema({
         minlength: 5,
         required: false,
     }
-});
+}));
 
 function validateCompany(company) {
-    const schema = {
+    const schema = Joi.object({
         name: Joi.string().min(3).required(),
         address: Joi.string().min(5)
-    };
+    });
 
-    return Joi.validate(company, schema);
+    return schema.validate(company, {abortEarly: false});
 }
 
-exports.Company = companySchema;
+exports.Company = company;
 exports.validateCompany = validateCompany;

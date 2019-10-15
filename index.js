@@ -2,7 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
+require("./startup/db");
 require("./startup/routes")(app);
+
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
