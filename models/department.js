@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 const random = require('../services/randomId');
-const {Company} = require("./company");
 
 const departmentSchema = new mongoose.Schema({
     _id: {
@@ -14,18 +13,22 @@ const departmentSchema = new mongoose.Schema({
         required: true
     },
     company: {
-        type: Company,
+        type: String,
+        ref: "Company",
         required: true
     }
 });
 
-function validateDepartment(department) {
-    const schema = {
-        name: Joi.string().min(2).required()
-    };
+const department = mongoose.model("Department", departmentSchema);
 
-    return Joi.validate(department, schema);
+function validateDepartment(department) {
+    const schema = Joi.object({
+        name: Joi.string().min(2).required(),
+        company: Joi.string().min(6).max(6).required()
+    });
+
+    return schema.validate(department);
 }
 
-exports.Department = departmentSchema;
+exports.Department = department;
 exports.validateDepartment = validateDepartment;
