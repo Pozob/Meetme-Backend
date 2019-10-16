@@ -1,5 +1,11 @@
 const cors = require("cors");
 
 module.exports = app => {
-    app.use(cors());
+    const corsOptions = {
+        origin: "*",
+        optionsSuccessStatus: 200,
+        exposedHeaders: 'x-webtoken',
+        methods: "GET,POST,PUT,DELETE"
+    };
+    app.use(cors(corsOptions));
 };
