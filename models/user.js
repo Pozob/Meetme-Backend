@@ -46,11 +46,18 @@ userSchema.methods.generateAuthToken = function() {
         name: this.name,
         email: this.email,
         username: this.username,
-        department: this.department
+        departmentName: this.department.name
     };
     
     return jwt.sign(obj, process.env.JWT_KEY);
 };
+
+const getDepartment = function() {
+    this.populate('department', "-__v");
+};
+
+userSchema.pre('find', getDepartment);
+userSchema.pre('findOne', getDepartment);
 
 const userModel = mongoose.model("User", userSchema);
 

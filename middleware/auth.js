@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
+    //Get the JSON Web Token.
     const token = req.header('x-webtoken');
     if (!token) return res.status(401).send("No token");
     

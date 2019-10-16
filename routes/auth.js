@@ -9,6 +9,7 @@ const {User} = require("../models/user");
 router.post("/", [valid(validateLogin)], async (req, res) => {
     const {username, password} = req.body;
     // Find the user first
+    // Also get the Department for him and include the password
     const user = await User.findOne({username: username}).select("+password");
     if (!user) return res.status(400).send("Invalid Username or Password");
     
