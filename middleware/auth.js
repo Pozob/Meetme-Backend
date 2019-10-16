@@ -6,7 +6,6 @@ module.exports = (req, res, next) => {
     
     try {
         const decodedToken = jwt.verify(token, process.env.JWT_KEY);
-        console.log(decodedToken);
         req.user = decodedToken;
         next();
     } catch (e) {
