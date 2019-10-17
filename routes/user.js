@@ -3,7 +3,7 @@ const router = express.Router();
 const valid = require("../middleware/validation");
 const auth = require("../middleware/auth");
 const bcrypt = require("bcryptjs");
-const {User, validateUser} = require("../models/user");
+const {User, validateUser, validateUserPatch} = require("../models/user");
 
 //Returns all
 router.get("/", (req, res) => {
@@ -54,6 +54,24 @@ router.put("/:id", [auth, valid(validateUser)], async(req, res) => {
     } catch (e) {
         console.log(e);
         res.send("Error");
+    }
+});
+
+router.patch("/:id", [auth, valid(validateUserPatch)], async (req, res) => {
+    const oldUser = await User.findOne({_id: req.params.id});
+    if(!oldUser) return res.status(404).send("No such User");
+    
+    const newUser = {...oldUser[0], ...req.body};
+    delete newUser._id;
+    
+    try {
+        await User.findByIdAndUpdate(req.params.id, newUser);
+        const user = User.find({_id: req.params.id});
+        const token = user.generateAuthToken();
+        return res.header("x-webtoken", token).send(user);
+    } catch(e) {
+        console.log("Error Patching", e);
+        res.status(500).res.send("Error Patching");
     }
 });
 

@@ -5,7 +5,7 @@ module.exports = app => {
         origin: "*",
         optionsSuccessStatus: 200,
         exposedHeaders: 'x-webtoken',
-        methods: "GET,POST,PUT,DELETE"
+        methods: "GET,POST,PUT,PATCH,DELETE"
     };
     app.use(cors(corsOptions));
 };
