@@ -66,12 +66,12 @@ router.patch("/:id", [auth, valid(validateUserPatch)], async (req, res) => {
     
     try {
         await User.findByIdAndUpdate(req.params.id, newUser);
-        const user = User.find({_id: req.params.id});
+        const user = await User.findOne({_id: req.params.id});
         const token = user.generateAuthToken();
         return res.header("x-webtoken", token).send(user);
     } catch(e) {
         console.log("Error Patching", e);
-        res.status(500).res.send("Error Patching");
+        res.status(500).send("Error Patching");
     }
 });
 
