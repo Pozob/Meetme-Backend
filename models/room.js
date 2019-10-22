@@ -16,6 +16,10 @@ const room = mongoose.model("Room", new mongoose.Schema({
         type: Number,
         required: false,
     },
+    equip: {
+        type: String,
+        required: false
+    },
     company: {
         type: String,
         ref: "Company",
@@ -27,6 +31,7 @@ function validateRoom(room) {
     const schema = Joi.object({
         name: Joi.string().min(2).required(),
         seatsize: Joi.number().integer().min(2),
+        equip: Joi.string(),
         company: Joi.string().min(6).max(6)
     });
     

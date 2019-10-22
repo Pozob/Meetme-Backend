@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.generateAuthToken = function() {
     const obj = {
-        id: this._id,
+        _id: this._id,
         name: this.name,
         email: this.email,
         username: this.username,

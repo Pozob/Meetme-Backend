@@ -12,6 +12,6 @@ module.exports = function(app) {
     app.use("/department", department);
     app.use("/meeting", meeting);
     app.use("/room", room);
-    app.use("/company", company)
+    app.use("/company", company);
     app.use("/auth", auth);
 };
