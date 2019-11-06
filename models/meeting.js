@@ -17,7 +17,7 @@ const meetingSchema =  new mongoose.Schema({
     },
     description: String,
     address: String,
-    date: Date,
+    // date: Date,
     timestart: Date,
     timeend: Date,
     participants: [{

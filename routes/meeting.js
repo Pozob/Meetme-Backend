@@ -3,6 +3,7 @@ const router = express.Router();
 const _ = require("lodash");
 const valid = require("../middleware/validation");
 const auth = require("../middleware/auth");
+const timeConv = require("../middleware/timeConvert");
 const {Meeting, validateMeeting} = require("../models/meeting");
 
 router.get("/", (req, res) => {
@@ -24,12 +25,12 @@ router.get("/:id", (req, res) => {
         .then(meeting => res.send(meeting));
 });
 
-router.post("/", [auth, valid(validateMeeting)], (req, res) => {
+router.post("/", [auth, valid(validateMeeting), timeConv], (req, res) => {
     const meeting = new Meeting(req.body);
     meeting.save().then(m => res.send(m));
 });
 
-router.put("/:id", [auth, valid(validateMeeting)], (req, res) => {
+router.put("/:id", [auth, valid(validateMeeting), timeConv], (req, res) => {
     Meeting.findByIdAndUpdate(req.params.id, req.body, {new: true, select: "-__v"})
         .then(meeting => res.send(meeting));
 });
