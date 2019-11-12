@@ -20,7 +20,7 @@ const getAll = (req, res) => {
 const getForUser = (req, res) => {
     Meeting.find({participants: req.query.user})
         .populate("room", "-__v")
-        .select("-__v -participants")
+        .select("-__v")
         .sort({timestart: "asc"})
         .then(meeting => res.send(meeting))
         .catch(err => {
