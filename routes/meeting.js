@@ -6,7 +6,7 @@ const auth = require("../middleware/auth");
 const timeConv = require("../middleware/timeConvert");
 const {Meeting, validateMeeting} = require("../models/meeting");
 
-router.get("/", (req, res) => {
+const getAll = (req, res) => {
     Meeting.find()
         .populate("room", "-__v")
         .select("-__v -participants")
@@ -15,6 +15,25 @@ router.get("/", (req, res) => {
             console.log(err);
             res.send("Could not get Meetings");
         });
+};
+
+const getForUser = (req, res) => {
+    Meeting.find({participants: req.query.user})
+        .select("-__v -participants")
+        .sort({timestart: "asc"})
+        .then(meeting => res.send(meeting))
+        .catch(err => {
+            console.log(err);
+            res.send("Could not get Meetings");
+        });
+};
+
+router.get("/", (req, res) => {
+    if(req.query.user) {
+        return getForUser(req, res);
+    } else {
+        return getAll(req, res);
+    }
 });
 
 router.get("/:id", (req, res) => {

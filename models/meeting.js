@@ -17,7 +17,6 @@ const meetingSchema =  new mongoose.Schema({
     },
     description: String,
     address: String,
-    // date: Date,
     timestart: Date,
     timeend: Date,
     participants: [{
@@ -32,11 +31,11 @@ function validateMeeting(meeting) {
     const schema = Joi.object({
         room: Joi.string().min(8).max(8),
         name: Joi.string().required(),
-        description: Joi.string(),
+        description: Joi.string().allow(""),
         address: Joi.string().min(5),
-        date: Joi.string().allow(""),
-        timestart: Joi.string().allow(""),
-        timeend: Joi.string().allow(""),
+        date: Joi.string().required(),
+        timestart: Joi.string().required(),
+        timeend: Joi.string().required(),
         participants: Joi.array()
     });
     
