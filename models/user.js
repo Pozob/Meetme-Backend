@@ -34,6 +34,9 @@ const userSchema = new mongoose.Schema({
         minlength: 5,
         select: false
     },
+    roles: [{
+        type: "String"
+    }],
     department: {
         type: String,
         ref: "Department",
