@@ -32,7 +32,7 @@ function validateMeeting(meeting) {
         room: Joi.string().min(8).max(8),
         name: Joi.string().required(),
         description: Joi.string().allow(""),
-        address: Joi.string().min(5),
+        address: Joi.string().min(5).allow(""),
         date: Joi.string().required(),
         timestart: Joi.string().required(),
         timeend: Joi.string().required(),
