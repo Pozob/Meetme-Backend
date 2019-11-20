@@ -50,7 +50,8 @@ userSchema.methods.generateAuthToken = function() {
         name: this.name,
         email: this.email,
         username: this.username,
-        department: this.department
+        department: this.department,
+        roles: this.roles || []
     };
     
     return jwt.sign(obj, process.env.JWT_KEY);
