@@ -77,7 +77,14 @@ router.patch("/:id", [auth, valid(validateUserPatch)], async (req, res) => {
 
 //Delete
 router.delete("/:id", [auth], (req, res) => {
-    User.deleteOne({_id: req.params.id})
+    User.findByIdAndRemove({_id: req.params.id})
+        .then(user => {
+            res.send(`User with ID ${req.params.id} deleted`);
+        })
+        .catch(err => {
+            console.log("Error while deleting", err);
+            res.send("Could not delete User");
+        });
 });
 
 module.exports = router;

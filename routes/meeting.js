@@ -7,9 +7,11 @@ const timeConv = require("../middleware/timeConvert");
 const {Meeting, validateMeeting} = require("../models/meeting");
 
 const getAll = (req, res) => {
-    Meeting.find()
+    const now = new Date().toISOString();
+    Meeting.find({timestart : {$gte: now}})
         .populate("room", "-__v")
         .select("-__v -participants")
+        .sort({timestart: "asc"})
         .then(meeting => res.send(meeting))
         .catch(err => {
             console.log(err);
