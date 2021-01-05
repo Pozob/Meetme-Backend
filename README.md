@@ -1,6 +1,6 @@
 This Program must have certain Enviromental Variables set.
 
-#####The following are mandatory:
+####The following are mandatory:
 
 `PORT`: The Port on which the App listens for requests
 
